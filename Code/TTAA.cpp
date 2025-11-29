@@ -13,10 +13,10 @@ struct Point;
 vector<Point> createShifts(Point P);
 bool pointInTriangle (Point pt, Point v1, Point v2, Point v3);
 enum class direction {
-    UP, // 0
-    RIGHT, // 1
-    DOWN, // 2
-    LEFT // 3
+    UP, 
+    RIGHT, 
+    DOWN, 
+    LEFT 
 };
 
 struct Point {
@@ -88,7 +88,6 @@ vector<Point> Triangle::createShifts(Point dimensions) {
 
     Point q1(1,1); 
 
-    // The three vertices of our triangle.
     Point v1((float)shiftX,(float)shiftY); 
     Point v2(0, dimensions.y);
     Point v3(dimensions.x, 0);
@@ -138,14 +137,10 @@ void Triangle::makeCombinations(int X, int Y, vector<PossibleShifts>& combinatio
             cX = aX;
             cY = aY + (int)combinations[i]._dimensions.y;
 
-            // Our points must lie on the board.
-
             if ( aX < 0 || aX > MATRIX_MAX || bX < 0 || bX > MATRIX_MAX ||cX < 0 || cX > MATRIX_MAX || 
                  aY < 0 || aY > MATRIX_MAX || bY < 0 || bY > MATRIX_MAX ||cY < 0 || cY > MATRIX_MAX) {
                 continue;
             }
-
-            // Our points are valid, push them back into our allTriangles vector for this triangle.
 
             allTriangles.push_back(Point((float)aX,(float)aY));
             allTriangles.push_back(Point((float)bX,(float)bY));
@@ -247,41 +242,30 @@ int orientation(Point p, Point q, Point r) {
     float val = (q.y - p.y) * (r.x - q.x) - 
               (q.x - p.x) * (r.y - q.y); 
     
-    // Co-linear
     if (std::abs(val) < 1e-9) return 0;  
-    // Non-colinear (1 = clockwise, 2 = counterclock wise) 
     return (val > 0) ? 1 : 2; 
 } 
 
 bool doIntersect(Point p1, Point q1, Point p2, Point q2) { 
-    // Find the four orientations needed for general and special cases 
     int o1 = orientation(p1, q1, p2); 
     int o2 = orientation(p1, q1, q2); 
     int o3 = orientation(p2, q2, p1); 
     int o4 = orientation(p2, q2, q1); 
-
-    // If the tips (vertices) of a triangle touch, we consider it as NOT
-    // crossing. 
     if (o1 == 0 || o2 == 0 || o3 == 0 || o4 == 0) return false;
 
-    // General case 
     if (o1 != o2 && o3 != o4) 
         return true; 
-  
-    // Special Cases 
-    // p1, q1 and p2 are colinear and p2 lies on segment p1q1 
+
+
     if (o1 == 0 && onSegment(p1, p2, q1)) return false;  
   
-    // p1, q1 and q2 are colinear and q2 lies on segment p1q1 
     if (o2 == 0 && onSegment(p1, q2, q1)) return false; 
-  
-    // p2, q2 and p1 are colinear and p1 lies on segment p2q2 
+
     if (o3 == 0 && onSegment(p2, p1, q2)) return false; 
-  
-     // p2, q2 and q1 are colinear and q1 lies on segment p2q2 
+
     if (o4 == 0 && onSegment(p2, q1, q2)) return false; 
   
-    return false; // Doesn't fall in any of the above cases 
+    return false;
 } 
 
 float sign (Point p1, Point p2, Point p3) {
@@ -319,8 +303,6 @@ bool triangleIsContainingOtherTriangle(vector<Point>& containingTriangleVertices
     }
     return false;
 }
- 
-//   Preprocessing and Solution  
 
 void preProcessValidTriangles(vector<Triangle>& WIN) {
     for (int i{}; i < WIN.size(); i++) {
@@ -363,10 +345,10 @@ void preProcessValidTriangles(vector<Triangle>& WIN) {
 }
 
 void drawGrid(const vector<Point>& solutionPoints) {
-    const int GRID_SIZE = MATRIX_MAX; // 17
+    const int GRID_SIZE = MATRIX_MAX; 
     char grid[GRID_SIZE][GRID_SIZE];
 
-    // Initialize grid with dots
+
     for(int y = 0; y < GRID_SIZE; ++y) {
         for(int x = 0; x < GRID_SIZE; ++x) {
             grid[y][x] = '.';
@@ -380,7 +362,6 @@ void drawGrid(const vector<Point>& solutionPoints) {
 
         for(int y = 0; y < GRID_SIZE; ++y) {
             for(int x = 0; x < GRID_SIZE; ++x) {
-                // Check center of the cell (x+0.5, y+0.5)
                 Point center((float)x + 0.5f, (float)y + 0.5f);
                 if(pointInTriangle(center, p1, p2, p3)) {
                     grid[y][x] = '*';
@@ -393,8 +374,7 @@ void drawGrid(const vector<Point>& solutionPoints) {
     cout << "\nGRID VISUALIZATION:\n   ";
     for(int x = 0; x < GRID_SIZE; ++x) cout << std::setw(2) << x;
     cout << "\n";
-    
-    // Print Grid Rows
+
     for(int y = 0; y < GRID_SIZE; ++y) {
         cout << std::setw(2) << y << " ";
         for(int x = 0; x < GRID_SIZE; ++x) {
@@ -471,7 +451,6 @@ void mySolution(vector<Triangle>& WIN, int index, vector<Point> e) {
 
 int main() {
 
-    // Holds our 29 triangles.
     vector<Triangle> WIN;
 
     vector<Point> ExistingPoints;
